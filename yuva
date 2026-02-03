@@ -1,0 +1,175 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.time.LocalDate;
+import java.util.*;
+
+public class ExpenseTrackerGUI {
+
+    static final String EXPENSE_FILE = "expenses.txt";
+    static final String USER_FILE = "users.txt";
+
+    public static void main(String[] args) {
+        createDefaultUser();
+        loginScreen();
+    }
+
+    // ---------- LOGIN ----------
+    static void loginScreen() {
+        JFrame frame = new JFrame("Login");
+        frame.setSize(300, 200);
+        frame.setLayout(new GridLayout(3, 2));
+
+        JTextField user = new JTextField();
+        JPasswordField pass = new JPasswordField();
+
+        frame.add(new JLabel("Username:"));
+        frame.add(user);
+        frame.add(new JLabel("Password:"));
+        frame.add(pass);
+
+        JButton login = new JButton("Login");
+        frame.add(login);
+
+        login.addActionListener(e -> {
+            if (checkLogin(user.getText(), new String(pass.getPassword()))) {
+                frame.dispose();
+                mainDashboard();
+            } else {
+                JOptionPane.showMessageDialog(frame, "Invalid Login");
+            }
+        });
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
+    static boolean checkLogin(String u, String p) {
+        try (BufferedReader br = new BufferedReader(new FileReader(USER_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] d = line.split(",");
+                if (d[0].equals(u) && d[1].equals(p)) return true;
+            }
+        } catch (Exception ignored) {}
+        return false;
+    }
+
+    static void createDefaultUser() {
+        File f = new File(USER_FILE);
+        if (!f.exists()) {
+            try (FileWriter fw = new FileWriter(USER_FILE)) {
+                fw.write("admin,1234\n");
+            } catch (Exception ignored) {}
+        }
+    }
+
+    // ---------- DASHBOARD ----------
+    static void mainDashboard() {
+        JFrame f = new JFrame("Expense Tracker");
+        f.setSize(400, 300);
+        f.setLayout(new GridLayout(5, 1));
+
+        JButton add = new JButton("Add Expense");
+        JButton view = new JButton("View Expenses");
+        JButton category = new JButton("Category Report");
+        JButton monthly = new JButton("Monthly Report");
+        JButton exit = new JButton("Exit");
+
+        f.add(add);
+        f.add(view);
+        f.add(category);
+        f.add(monthly);
+        f.add(exit);
+
+        add.addActionListener(e -> addExpense());
+        view.addActionListener(e -> viewExpenses());
+        category.addActionListener(e -> categoryReport());
+        monthly.addActionListener(e -> monthlyReport());
+        exit.addActionListener(e -> System.exit(0));
+
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+    }
+
+    // ---------- ADD EXPENSE ----------
+    static void addExpense() {
+        JTextField category = new JTextField();
+        JTextField amount = new JTextField();
+
+        Object[] data = {
+                "Category:", category,
+                "Amount:", amount
+        };
+
+        int result = JOptionPane.showConfirmDialog(null, data, "Add Expense",
+                JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION) {
+            try (FileWriter fw = new FileWriter(EXPENSE_FILE, true)) {
+                String date = LocalDate.now().toString();
+                fw.write(date + "," + category.getText() + "," + amount.getText() + "\n");
+                JOptionPane.showMessageDialog(null, "Expense Added");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error");
+            }
+        }
+    }
+
+    // ---------- VIEW ----------
+    static void viewExpenses() {
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(EXPENSE_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+        } catch (Exception ignored) {}
+
+        JTextArea area = new JTextArea(sb.toString());
+        JOptionPane.showMessageDialog(null, new JScrollPane(area), "All Expenses",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    // ---------- CATEGORY REPORT ----------
+    static void categoryReport() {
+        Map<String, Double> map = new HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(EXPENSE_FILE))) {
+            String l;
+            while ((l = br.readLine()) != null) {
+                String[] d = l.split(",");
+                map.put(d[1], map.getOrDefault(d[1], 0.0) + Double.parseDouble(d[2]));
+            }
+        } catch (Exception ignored) {}
+
+        StringBuilder sb = new StringBuilder("Category-wise Expense:\n");
+        for (String k : map.keySet()) {
+            sb.append(k).append(" : ₹").append(map.get(k)).append("\n");
+        }
+
+        JOptionPane.showMessageDialog(null, sb.toString());
+    }
+
+    // ---------- MONTHLY REPORT ----------
+    static void monthlyReport() {
+        Map<String, Double> map = new HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(EXPENSE_FILE))) {
+            String l;
+            while ((l = br.readLine()) != null) {
+                String[] d = l.split(",");
+                String month = d[0].substring(0, 7); // yyyy-mm
+                map.put(month, map.getOrDefault(month, 0.0) + Double.parseDouble(d[2]));
+            }
+        } catch (Exception ignored) {}
+
+        StringBuilder sb = new StringBuilder("Monthly Report:\n");
+        for (String k : map.keySet()) {
+            sb.append(k).append(" : ₹").append(map.get(k)).append("\n");
+        }
+
+        JOptionPane.showMessageDialog(null, sb.toString());
+    }
+}
